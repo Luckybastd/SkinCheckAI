@@ -8,7 +8,7 @@ import os
 import pandas as pd
 import io
 
-WEIGHTS_PATH = 'best_skin_model_b3.weights.h5' 
+WEIGHTS_PATH = 'model_weights.h5' 
 IMG_SIZE = 384
 NUM_CLASSES = 6
 CONFIDENCE_THRESHOLD = 0.50
