@@ -56,14 +56,10 @@ def load_model():
         st.stop()
     
     try:
-        # Karena file Anda ternyata berisi '4 layers' (Full Model),
-        # Kita gunakan load_model, bukan load_weights.
         model = tf.keras.models.load_model(WEIGHTS_PATH)
         print("✅ Full Model loaded successfully.")
         return model
     except Exception as e:
-        # Jika load_model gagal karena masalah format Keras 3, 
-        # kita gunakan cara manual sebagai cadangan terakhir.
         try:
             base_model = tf.keras.applications.EfficientNetV2S(
                 include_top=False, weights=None, input_shape=(IMG_SIZE, IMG_SIZE, 3)
@@ -76,7 +72,6 @@ def load_model():
                 tf.keras.layers.Dropout(0.4),
                 tf.keras.layers.Dense(NUM_CLASSES, activation='softmax')
             ])
-            # Memuat bobot dengan skip_mismatch agar tidak error 283 layers lagi
             model.load_weights(WEIGHTS_PATH, skip_mismatch=True)
             return model
         except Exception as e_final:
@@ -219,7 +214,9 @@ if selected_file is not None:
                 with col_dl1: st.download_button("⬇️ Download Result", data=buf, file_name="result.png", mime="image/png", use_container_width=True)
             st.divider()
             if len(det_data) > 0:
-                st.table(pd.DataFrame(det_data))
+                df_result = pd.DataFrame(det_data)
+                df_result.index = df_result.index + 1
+                st.table(df_result)
                 unique_diseases = set([d['Condition'] for d in det_data])
                 for d in unique_diseases:
                     dk = d.split(" / ")[0] if " / " in d else d
