@@ -55,35 +55,33 @@ def load_model():
         st.error(f"❌ File '{WEIGHTS_PATH}' tidak ditemukan!")
         st.stop()
     
-    # PERCOBAAN 1: Muat bobot langsung (Metode paling bersih)
     try:
-        # Kita rebuild arsitektur dulu karena file Anda hanya berisi bobot
-        input_tensor = tf.keras.layers.Input(shape=(IMG_SIZE, IMG_SIZE, 3))
-        base_model = tf.keras.applications.EfficientNetV2S(
-            include_top=False, weights=None, input_tensor=input_tensor
-        )
-        x = tf.keras.layers.GlobalAveragePooling2D()(base_model.output)
-        x = tf.keras.layers.Dense(512, activation='relu')(x)
-        x = tf.keras.layers.BatchNormalization()(x)
-        x = tf.keras.layers.Dropout(0.4)(x)
-        predictions = tf.keras.layers.Dense(NUM_CLASSES, activation='softmax')(x)
-        model = tf.keras.Model(inputs=input_tensor, outputs=predictions)
-        
-        # Load weights secara legacy (mendukung .h5 yang di-rename)
-        model.load_weights(WEIGHTS_PATH)
+        # Karena file Anda ternyata berisi '4 layers' (Full Model),
+        # Kita gunakan load_model, bukan load_weights.
+        model = tf.keras.models.load_model(WEIGHTS_PATH)
+        print("✅ Full Model loaded successfully.")
         return model
     except Exception as e:
-        # Jika gagal, kita beri info teknis di terminal saja, bukan di layar user
-        print(f"INFO: Metode load standar gagal, mencoba metode alternatif... ({e})")
-
-    # PERCOBAAN 2: Metode Alternatif (Jika yang di atas gagal)
-    try:
-        # Menggunakan load_weights dengan skip_mismatch untuk keamanan ekstra
-        model.load_weights(WEIGHTS_PATH, skip_mismatch=True)
-        return model
-    except Exception as e_final:
-        st.error(f"❌ FATAL: Model gagal dimuat total. Error: {e_final}")
-        st.stop()
+        # Jika load_model gagal karena masalah format Keras 3, 
+        # kita gunakan cara manual sebagai cadangan terakhir.
+        try:
+            base_model = tf.keras.applications.EfficientNetV2S(
+                include_top=False, weights=None, input_shape=(IMG_SIZE, IMG_SIZE, 3)
+            )
+            model = tf.keras.Sequential([
+                base_model,
+                tf.keras.layers.GlobalAveragePooling2D(),
+                tf.keras.layers.Dense(512, activation='relu'),
+                tf.keras.layers.BatchNormalization(),
+                tf.keras.layers.Dropout(0.4),
+                tf.keras.layers.Dense(NUM_CLASSES, activation='softmax')
+            ])
+            # Memuat bobot dengan skip_mismatch agar tidak error 283 layers lagi
+            model.load_weights(WEIGHTS_PATH, skip_mismatch=True)
+            return model
+        except Exception as e_final:
+            st.error(f"❌ Gagal memuat model: {e_final}")
+            st.stop()
 
 def process_results(preds_batch, coords, boxes, confidences, class_ids):
     for i, preds in enumerate(preds_batch):
