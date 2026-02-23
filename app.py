@@ -8,7 +8,7 @@ import os
 import pandas as pd
 import io
 
-st.set_page_config(page_title="DermSight AI", layout="wide")
+st.set_page_config(page_title="DermSight AI", page_icon="🔬", layout="wide")
 
 st.markdown("""
     <style>
