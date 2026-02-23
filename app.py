@@ -186,9 +186,9 @@ with st.sidebar:
     **SkinCheck AI** provides early detection of skin abnormalities using *Deep Learning* technology.
     **Model:** EfficientNetV2-S
     """)
-    st.warning("⚠️ **DISCLAIMER:**\nThis AI detection result is for REFERENCE ONLY. A definitive diagnosis must be performed by a certified Doctor.")
-st.title("🔬 SkinCheck AI: Early Skin Disease Detection")
-tab1, tab2 = st.tabs(["📁 Upload from Gallery", "📸 Take Photo (Camera)"])
+    st.warning("**DISCLAIMER:**\nThis AI detection result is for REFERENCE ONLY. A definitive diagnosis must be performed by a certified Doctor.")
+st.title("SkinCheck AI: Early Skin Disease Detection")
+tab1, tab2 = st.tabs(["Upload from Gallery", "Take Photo (Camera)"])
 selected_file = None
 with tab1:
     uploaded_file = st.file_uploader("Upload skin photo (JPG/PNG)", type=["jpg", "jpeg", "png"])
@@ -201,12 +201,12 @@ if selected_file is not None:
     col1, col2 = st.columns([1, 1])
     model = load_model()
     with col1:
-        st.subheader("📸 Input Photo")
+        st.subheader("Input Photo")
         st.image(selected_file, use_column_width=True)
-        if st.button("🚀 Start Analysis", type="primary", use_container_width=True):
+        if st.button("Start Analysis", type="primary", use_container_width=True):
             selected_file.seek(0)
             with col2:
-                st.subheader("🎯 AI Detection Result")
+                st.subheader("AI Detection Result")
                 result_fig, det_data = predict_image(selected_file, model)
                 st.pyplot(result_fig)
                 buf = io.BytesIO(); result_fig.savefig(buf, format="png", bbox_inches='tight'); buf.seek(0)
@@ -223,7 +223,7 @@ if selected_file is not None:
                     info = medical_info.get(dk, medical_info['Normal Skin'])
                     with st.expander(f"ℹ️ What is {dk}?", expanded=True):
                         st.markdown(f"**Risk:** `{info['risk']}`\n**Explanation:** {info['description']}\n**Advice:** {info['advice']}")
-            else: st.success("✅ **Clean Result!**")
-else: st.info("👆 Please select an input method above.")
+            else: st.success("**Clean Result!**")
+else: st.info("Please select an input method above.")
 st.divider()
 st.caption("Made by: jnn")
