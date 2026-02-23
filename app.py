@@ -19,93 +19,86 @@ st.markdown("""
     }
 
     .hero-container {
-        background: linear-gradient(135deg, #1E293B, #0F172A);
-        border-radius: 16px;
-        padding: 40px 30px;
+        background: linear-gradient(135deg, #0B2447, #19376D, #576CBC);
+        border-radius: 20px;
+        padding: 40px 20px;
         text-align: center;
         color: white;
         margin-bottom: 30px;
-        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.2);
+        box-shadow: 0 10px 30px rgba(25, 55, 109, 0.3);
+        position: relative;
+        overflow: hidden;
     }
     
     .hero-title {
-        font-size: 3rem;
+        font-size: 3.5rem;
         font-weight: 700;
-        margin-bottom: 8px;
-        color: #F8FAFC;
-        letter-spacing: 0.5px;
+        margin-bottom: 10px;
+        background: linear-gradient(to right, #A5D7E8, #FFFFFF);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: 1px;
     }
     
     .hero-subtitle {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
         font-weight: 300;
-        color: #CBD5E1;
+        opacity: 0.9;
         margin-bottom: 0;
     }
 
     .stButton>button {
-        background-color: #2563EB;
+        background: linear-gradient(90deg, #19376D 0%, #576CBC 100%);
         color: white;
         border: none;
-        border-radius: 8px;
-        padding: 12px 24px;
+        border-radius: 50px;
+        padding: 10px 24px;
         font-weight: 600;
         letter-spacing: 0.5px;
-        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        box-shadow: 0 4px 15px rgba(87, 108, 188, 0.4);
         transition: all 0.3s ease;
         width: 100%;
     }
-    
     .stButton>button:hover {
-        background-color: #1D4ED8;
-        box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+        box-shadow: 0 8px 25px rgba(87, 108, 188, 0.6);
         transform: translateY(-2px);
         color: white;
+        border-color: transparent;
     }
 
     .info-card {
-        background: #FFFFFF;
-        border-radius: 12px;
-        padding: 24px;
+        background: #ffffff;
+        border-radius: 15px;
+        padding: 25px;
         margin-bottom: 20px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        border: 1px solid #E2E8F0;
-        border-left: 6px solid #3B82F6;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        border-left: 8px solid #576CBC;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    
     .info-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
     }
     
     .risk-badge {
         display: inline-block;
-        padding: 6px 14px;
+        padding: 5px 12px;
         border-radius: 20px;
         font-size: 0.85rem;
         font-weight: 600;
-        margin-bottom: 16px;
+        margin-bottom: 15px;
     }
 
     [data-testid="stSidebar"] {
-        background-color: #F8FAFC;
-        border-right: 1px solid #E2E8F0;
+        background-color: #F8F9FA;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.05);
     }
     
     hr {
         border: 0;
         height: 1px;
-        background: #E2E8F0;
+        background: linear-gradient(to right, rgba(0,0,0,0), rgba(87, 108, 188, 0.3), rgba(0,0,0,0));
         margin: 30px 0;
-    }
-
-    .image-container {
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-        border: 1px solid #E2E8F0;
-        background: white;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -122,45 +115,45 @@ medical_info = {
     'Melanoma': {
         'risk': 'SANGAT TINGGI',
         'risk_color': '#FEE2E2', 'risk_text': '#DC2626',
-        'description': 'Jenis kanker kulit yang sangat agresif. Berkembang dari sel melanosit penghasil pigmen.',
-        'advice': 'Segera konsultasikan dengan Dokter Spesialis Kulit untuk prosedur biopsi. Membutuhkan penanganan medis segera.'
+        'description': 'Jenis kanker kulit yang paling mematikan jika dibiarkan. Berkembang dari sel melanosit penghasil pigmen.',
+        'advice': 'Segera konsultasikan dengan Dokter Spesialis Kulit untuk biopsi dan tindakan lebih lanjut. Jangan ditunda.'
     },
     'Squamous Cell Carcinoma': {
         'risk': 'MENENGAH-TINGGI',
-        'risk_color': '#FFEDD5', 'risk_text': '#C2410C',
-        'description': 'Kanker kulit yang berkembang di lapisan epidermis. Sering muncul di area yang terpapar sinar matahari.',
-        'advice': 'Harus diperiksa oleh dokter. Tingkat kesembuhan sangat baik jika dideteksi dan diangkat sejak dini.'
+        'risk_color': '#FEF3C7', 'risk_text': '#D97706',
+        'description': 'Kanker kulit yang berkembang di lapisan luar kulit epidermis. Biasanya muncul di area yang sering terpapar sinar matahari.',
+        'advice': 'Segera temui dokter. Tingkat kesembuhan sangat tinggi jika terdeteksi dan diobati sejak dini.'
     },
     'Basal Cell Carcinoma': {
         'risk': 'MENENGAH',
-        'risk_color': '#FEF9C3', 'risk_text': '#A16207',
-        'description': 'Kanker kulit paling umum. Pertumbuhannya lambat dan jarang menyebar, namun dapat merusak jaringan lokal.',
-        'advice': 'Konsultasikan dengan dokter spesialis kulit untuk prosedur pengangkatan lesi.'
+        'risk_color': '#FEF9C3', 'risk_text': '#CA8A04',
+        'description': 'Kanker kulit yang paling umum. Tumbuh lambat dan jarang menyebar ke organ lain, namun bisa merusak jaringan sekitar.',
+        'advice': 'Konsultasikan dengan dokter untuk prosedur pengangkatan jaringan agar tidak membesar dan merusak estetika.'
     },
     'Acne': {
         'risk': 'RENDAH',
-        'risk_color': '#D1FAE5', 'risk_text': '#047857',
-        'description': 'Kondisi peradangan pada kelenjar minyak kulit. Termasuk komedo, papula, atau pustula.',
-        'advice': 'Jaga kebersihan kulit. Gunakan produk perawatan yang sesuai atau konsultasikan dengan dokter untuk jerawat meradang.'
+        'risk_color': '#D1FAE5', 'risk_text': '#059669',
+        'description': 'Jerawat biasa. Terjadi akibat peradangan pada kelenjar minyak. Bisa berupa komedo, papula, atau pustula.',
+        'advice': 'Jaga kebersihan wajah, kurangi makanan berminyak, gunakan obat jerawat, atau ke dokter estetika jika meradang hebat.'
     },
     'Nevus': {
         'risk': 'AMAN',
-        'risk_color': '#E0F2FE', 'risk_text': '#0369A1',
-        'description': 'Tahi lalat jinak. Kumpulan sel melanosit normal yang tidak memiliki potensi bahaya.',
-        'advice': 'Tidak memerlukan tindakan medis. Disarankan pemantauan mandiri berkala terhadap perubahan ukuran atau warna.'
+        'risk_color': '#E0F2FE', 'risk_text': '#0284C7',
+        'description': 'Tahi lalat jinak. Merupakan kumpulan sel pigmen normal pada kulit yang tidak berbahaya sama sekali.',
+        'advice': 'Tidak perlu tindakan medis. Namun, pantau jika ada perubahan mendadak pada bentuk, warna, atau ukurannya.'
     },
     'Normal Skin': {
         'risk': 'SANGAT AMAN',
         'risk_color': '#DBEAFE', 'risk_text': '#1D4ED8',
-        'description': 'Jaringan kulit terpantau sehat tanpa adanya kelainan lesi atau pigmentasi abnormal.',
-        'advice': 'Pertahankan rutinitas kebersihan kulit dan gunakan tabir surya secara teratur saat beraktivitas.'
+        'description': 'Kulit terlihat sehat. Tidak terdeteksi adanya kelainan, lesi berbahaya, atau infeksi.',
+        'advice': 'Tetap jaga kesehatan kulit Anda dan gunakan tabir surya secara rutin.'
     }
 }
 
 @st.cache_resource
 def load_model():
     if not os.path.exists(WEIGHTS_PATH):
-        st.error(f"File '{WEIGHTS_PATH}' tidak ditemukan.")
+        st.error(f"File {WEIGHTS_PATH} tidak ditemukan.")
         st.stop()
     
     try:
@@ -228,7 +221,7 @@ def predict_image(image_file, model):
         original_img = cv2.resize(original_img, (int(w*scale)+1, int(h*scale)+1))
         h, w, _ = original_img.shape
 
-    progress_bar = st.progress(0, text="Memproses analisis citra...")
+    progress_bar = st.progress(0, text="AI sedang memindai tekstur kulit Anda...")
     batch_img, batch_xy, boxes, confs, ids = [], [], [], [], []
     y_range = range(0, h - IMG_SIZE + 1, STRIDE)
     x_range = range(0, w - IMG_SIZE + 1, STRIDE)
@@ -267,22 +260,22 @@ def predict_image(image_file, model):
             score = confs[i]
             raw_id = ids[i]
             if isinstance(raw_id, str):
-                label = raw_id; box_color = '#F59E0B'; font_color = 'black'
+                label = raw_id; box_color = 'orange'; font_color = 'black'
             else:
                 label = class_names[raw_id]
                 if label == 'Melanoma': box_color = '#DC2626'; font_color = 'white'
-                elif label == 'Squamous Cell Carcinoma': box_color = '#EA580C'; font_color = 'white'
+                elif label == 'Squamous Cell Carcinoma': box_color = '#D97706'; font_color = 'white'
                 elif label == 'Basal Cell Carcinoma': box_color = '#CA8A04'; font_color = 'white'
                 elif label == 'Acne':
-                    box_color = '#10B981'; font_color = 'white'
+                    box_color = '#059669'; font_color = 'white'
                     shrink = 0.5
                     new_w, new_h = int(w_box*shrink), int(h_box*shrink)
                     x += (w_box-new_w)//2; y += (h_box-new_h)//2
                     w_box, h_box = new_w, new_h
-                else: box_color = '#3B82F6'; font_color = 'white'
+                else: box_color = '#0284C7'; font_color = 'white'
                 
-            ax.add_patch(plt.Rectangle((x, y), w_box, h_box, fill=False, color=box_color, linewidth=3))
-            ax.text(x, y-10, f"{label} ({score*100:.0f}%)", color=font_color, bbox=dict(facecolor=box_color, alpha=0.9, edgecolor='none', boxstyle='round,pad=0.4'), fontsize=10, fontweight='bold')
+            ax.add_patch(plt.Rectangle((x, y), w_box, h_box, fill=False, color=box_color, linewidth=4))
+            ax.text(x, y-10, f"{label} ({score*100:.0f}%)", color=font_color, bbox=dict(facecolor=box_color, alpha=0.9, edgecolor='none', boxstyle='round,pad=0.3'), fontsize=11, fontweight='bold')
             
             if label not in highest_confidence_per_class or score > highest_confidence_per_class[label]:
                 highest_confidence_per_class[label] = score
@@ -290,73 +283,73 @@ def predict_image(image_file, model):
     detected_data = []
     for label, score in highest_confidence_per_class.items():
         detected_data.append({'Kondisi': label, 'Akurasi AI': f"{score*100:.1f}%"})
-    
+        
     detected_data = sorted(detected_data, key=lambda x: float(x['Akurasi AI'].strip('%')), reverse=True)
             
     ax.axis('off')
     return fig, detected_data
 
-
 with st.sidebar:
     st.image("https://th.bing.com/th/id/R.7545b55b9d17b1070e2c884ffa6858fd?rik=3D80%2fEg6i9TK2A&riu=http%3a%2f%2f1.bp.blogspot.com%2f-P8KJ9GPI9ds%2fT9QrVuX-ycI%2fAAAAAAAAK3g%2fdW9fIbMoO14%2fs1600%2flogo%2bunsri.png", use_column_width=True)
-    st.markdown("<h2 style='text-align: center; color: #1E293B; font-weight: 600;'>DermSight AI</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center; color: #19376D;'>DermSight AI</h2>", unsafe_allow_html=True)
     st.markdown("""
-    <div style='background-color: white; padding: 16px; border-radius: 8px; border: 1px solid #E2E8F0; margin-bottom: 20px;'>
-    <b style='color: #334155;'>Fungsi Sistem:</b><br>
-    <span style='color: #475569; font-size: 0.9rem;'>Analisis visual berbasis Deep Learning untuk identifikasi awal pola abnormalitas kulit.</span>
-    <hr style='margin: 12px 0; border: 0; border-top: 1px solid #E2E8F0;'>
-    <b style='color: #334155;'>Arsitektur:</b><br>
-    <span style='color: #475569; font-size: 0.9rem;'>EfficientNetV2-S</span>
+    <div style='background-color: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 20px;'>
+    <b>Tujuan:</b><br>
+    Membantu masyarakat mendeteksi dini masalah kulit melalui lensa Kecerdasan Buatan (Deep Learning).
+    <hr style='margin: 10px 0;'>
+    <b>Arsitektur:</b><br>
+    EfficientNetV2-S
     </div>
     """, unsafe_allow_html=True)
     
     st.markdown("""
-    <div style='background-color: #FEF2F2; color: #991B1B; padding: 16px; border-radius: 8px; border-left: 4px solid #DC2626; font-size: 0.85rem;'>
+    <div style='background-color: #FEF2F2; color: #991B1B; padding: 15px; border-radius: 10px; border-left: 5px solid #DC2626; font-size: 0.9rem;'>
     <b>DISCLAIMER MEDIS</b><br>
-    Hasil analisis sistem bersifat indikatif dan tidak dapat mensubstitusi diagnosis klinis dari tenaga medis profesional.
+    Sistem ini bukan pengganti dokter. Hanya sebagai referensi awal. Jika ragu, selalu kunjungi fasilitas kesehatan terdekat.
     </div>
     """, unsafe_allow_html=True)
 
 st.markdown("""
 <div class="hero-container">
     <div class="hero-title">DermSight AI</div>
-    <div class="hero-subtitle">Pemindaian Visual Dermatologi Cerdas</div>
+    <div class="hero-subtitle">Asisten Cerdas untuk Menganalisis Kesehatan Kulit Anda</div>
 </div>
 """, unsafe_allow_html=True)
 
-with st.expander("Prosedur Penggunaan Sistem"):
+with st.expander("**Petunjuk Penggunaan Aplikasi (Wajib Baca)**"):
     st.markdown("""
-    - **Langkah 1:** Unggah citra melalui panel galeri atau aktifkan tangkapan kamera langsung.
-    - **Langkah 2:** Pastikan area kulit mendapatkan eksposur cahaya yang optimal dan fokus lensa yang tajam.
-    - **Langkah 3:** Mulai proses analisis dan tunggu hingga indikator penyelesaian penuh.
-    - **Langkah 4:** Tinjau pemetaan visual dan baca rangkuman indikasi medis yang diberikan.
+    - **Langkah 1:** Pilih tab unggah dari Galeri atau gunakan langsung Kamera Anda.
+    - **Langkah 2:** Gunakan pencahayaan yang terang, pastikan foto fokus dan memperlihatkan area kulit dengan jelas.
+    - **Langkah 3:** Klik tombol Mulai Analisis AI dan tunggu mesin bekerja.
+    - **Langkah 4:** Baca kotak hasil di sebelah kanan untuk melihat saran medis.
     """)
 
-tab1, tab2, tab3 = st.tabs(["Unggah Direktori Lokal", "Tangkapan Kamera", "Informasi Kondisi Kulit"])
+tab1, tab2, tab3 = st.tabs(["Unggah Galeri", "Gunakan Kamera", "Ensiklopedia Kulit"])
 
 selected_file = None
 
 with tab1:
-    st.markdown("<p style='font-weight: 500; color: #334155;'>Pilih berkas citra dari perangkat</p>", unsafe_allow_html=True)
-    uploaded_file = st.file_uploader("Format valid: JPG, JPEG, PNG", type=["jpg", "jpeg", "png"])
+    st.markdown("### Pilih foto dari perangkat Anda")
+    uploaded_file = st.file_uploader("Format didukung: JPG, JPEG, PNG", type=["jpg", "jpeg", "png"])
     if uploaded_file: selected_file = uploaded_file
 
 with tab2:
-    st.markdown("<p style='font-weight: 500; color: #334155;'>Ambil citra secara langsung</p>", unsafe_allow_html=True)
-    camera_file = st.camera_input("Pastikan perangkat dalam keadaan stabil")
+    st.markdown("### Potret kulit Anda langsung")
+    camera_file = st.camera_input("Pastikan cahaya terang dan gambar fokus")
     if camera_file: selected_file = camera_file
 
 with tab3:
-    st.markdown("<p style='font-weight: 500; color: #334155; margin-bottom: 20px;'>Klasifikasi target yang didukung oleh model analitik:</p>", unsafe_allow_html=True)
+    st.markdown("### Pahami Berbagai Kondisi Kulit")
+    st.markdown("Berikut adalah daftar kondisi yang dilatih dan dapat dikenali oleh model AI kami:")
     for kondisi, info in medical_info.items():
         st.markdown(f"""
-        <div class="info-card" style="border-left-color: {info['risk_text']};">
-            <h3 style='margin-top: 0; color: #1E293B; font-size: 1.2rem;'>{kondisi}</h3>
+        <div class="info-card">
+            <h3 style='margin-top: 0; color: #19376D;'>{kondisi}</h3>
             <div class="risk-badge" style="background-color: {info['risk_color']}; color: {info['risk_text']};">
-                Indeks Risiko: {info['risk']}
+                Risiko: {info['risk']}
             </div>
-            <p style='color: #475569; font-size: 0.95rem;'><b>Deskripsi Klinis:</b> {info['description']}</p>
-            <p style='color: #0F172A; font-size: 0.95rem; margin-bottom: 0;'><b>Saran Penanganan:</b> {info['advice']}</p>
+            <p style='color: #4B5563; font-size: 1.05rem;'><b>Deskripsi:</b> {info['description']}</p>
+            <p style='color: #374151; font-style: italic;'><b>Saran Medis:</b> {info['advice']}</p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -364,73 +357,74 @@ if selected_file is not None:
     st.markdown("<br>", unsafe_allow_html=True)
     col1, col2 = st.columns([1, 1.2], gap="large")
     
-    with st.spinner("Menginisialisasi komputasi model..."):
+    with st.spinner("Menginisialisasi Model AI..."):
         model = load_model()
         
     with col1:
-        st.markdown("<h3 style='text-align:center; color:#1E293B; font-size: 1.2rem; margin-bottom: 15px;'>Citra Referensi</h3>", unsafe_allow_html=True)
-        st.markdown('<div class="image-container">', unsafe_allow_html=True)
+        st.markdown("<h3 style='text-align:center; color:#19376D;'>Foto Input</h3>", unsafe_allow_html=True)
+        st.markdown('<div style="border-radius:15px; overflow:hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">', unsafe_allow_html=True)
         st.image(selected_file, use_column_width=True)
         st.markdown('</div><br>', unsafe_allow_html=True)
         
-        analyze_btn = st.button("Jalankan Pemindaian", use_container_width=True)
+        analyze_btn = st.button("Mulai Analisis AI", use_container_width=True)
 
     if analyze_btn:
         selected_file.seek(0)
         with col2:
-            st.markdown("<h3 style='text-align:center; color:#1E293B; font-size: 1.2rem; margin-bottom: 15px;'>Pemetaan Deteksi AI</h3>", unsafe_allow_html=True)
+            st.markdown("<h3 style='text-align:center; color:#19376D;'>Hasil Pemindaian</h3>", unsafe_allow_html=True)
             result_fig, det_data = predict_image(selected_file, model)
             
-            st.markdown('<div class="image-container">', unsafe_allow_html=True)
+            st.markdown('<div style="border-radius:15px; overflow:hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 2px solid #576CBC;">', unsafe_allow_html=True)
             st.pyplot(result_fig)
             st.markdown('</div><br>', unsafe_allow_html=True)
             
             buf = io.BytesIO(); result_fig.savefig(buf, format="png", bbox_inches='tight'); buf.seek(0)
-            st.download_button("Simpan Hasil Analisis", data=buf, file_name="Analisis_DermSight.png", mime="image/png", use_container_width=True)
+            st.download_button("Simpan Hasil ke Galeri", data=buf, file_name="Hasil_DermSight.png", mime="image/png", use_container_width=True)
             
         st.markdown("<hr>", unsafe_allow_html=True)
-        st.markdown("<h2 style='text-align:center; color:#1E293B; font-size: 1.5rem; margin-bottom: 30px;'>Laporan Deteksi Terintegrasi</h2>", unsafe_allow_html=True)
+        st.markdown("<h2 style='text-align:center; color:#19376D;'>Rangkuman Medis Anda</h2>", unsafe_allow_html=True)
         
         if len(det_data) > 0:
             col_table, col_info = st.columns([1, 2], gap="large")
             with col_table:
-                st.markdown("<p style='font-weight: 600; color: #334155; font-size: 1.1rem;'>Detail Identifikasi:</p>", unsafe_allow_html=True)
+                st.markdown("#### Detail Temuan AI:")
                 df_result = pd.DataFrame(det_data)
                 df_result.index = df_result.index + 1
                 st.dataframe(df_result, use_container_width=True)
             
             with col_info:
-                st.markdown("<p style='font-weight: 600; color: #334155; font-size: 1.1rem;'>Interpretasi Medis:</p>", unsafe_allow_html=True)
+                st.markdown("#### Penjelasan & Tindakan:")
                 unique_diseases = set([d['Kondisi'] for d in det_data])
                 for d in unique_diseases:
                     dk = d.split(" / ")[0] if " / " in d else d
                     info = medical_info.get(dk, medical_info['Normal Skin'])
                     
                     st.markdown(f"""
-                    <div class="info-card" style="border-left-color: {info['risk_text']}; padding: 20px;">
-                        <h4 style="margin-top: 0; color: #1E293B; font-size: 1.1rem;">{dk}</h4>
-                        <div class="risk-badge" style="background-color: {info['risk_color']}; color: {info['risk_text']}; padding: 4px 10px; font-size: 0.8rem;">
+                    <div class="info-card" style="border-left-color: {info['risk_text']};">
+                        <h4 style="margin-top: 0; color: #1E293B;">{dk}</h4>
+                        <div class="risk-badge" style="background-color: {info['risk_color']}; color: {info['risk_text']};">
                             {info['risk']}
                         </div>
-                        <p style="color: #475569; font-size: 0.9rem; margin-bottom: 8px;"><b>Catatan:</b> {info['description']}</p>
-                        <p style="color: #0F172A; font-size: 0.9rem; margin-bottom: 0;"><b>Tindakan:</b> {info['advice']}</p>
+                        <p style="color: #475569;"><b>Keterangan:</b> {info['description']}</p>
+                        <p style="color: #0F172A;"><b>Tindakan:</b> <em>{info['advice']}</em></p>
                     </div>
                     """, unsafe_allow_html=True)
         else: 
             st.markdown("""
-            <div style="background-color: #ECFDF5; border: 1px solid #A7F3D0; padding: 25px; border-radius: 12px; text-align: center; color: #065F46; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.05);">
-                <h3 style="margin:0; color: #047857; font-size: 1.3rem;">Tidak Ditemukan Indikasi Abnormal</h3>
-                <p style="font-size: 1rem; margin-top: 8px; color: #059669;">Pemindaian tidak mendeteksi pola yang mengarah pada kelainan lesi atau pigmentasi berbahaya.</p>
+            <div style="background: linear-gradient(135deg, #10B981, #059669); padding: 30px; border-radius: 15px; text-align: center; color: white; box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);">
+                <h2 style="margin:0; color: white;">Kabar Baik!</h2>
+                <p style="font-size: 1.1rem; margin-top: 10px;">AI tidak menemukan indikasi kelainan berbahaya seperti kanker pada area yang dipindai. Kulit Anda terlihat sehat!</p>
             </div>
             """, unsafe_allow_html=True)
             
 else: 
     st.markdown("""
-    <div style="text-align:center; padding: 60px 20px; background-color: #F8FAFC; border-radius: 16px; border: 2px dashed #CBD5E1; color: #64748B; margin-top: 20px;">
-        <h3 style="color: #475569; font-weight: 500;">Sistem Menunggu Input</h3>
-        <p>Silakan gunakan panel input di bagian atas untuk memulai prosedur analisis.</p>
+    <div style="text-align:center; padding: 50px; background-color: #F8F9FA; border-radius: 15px; border: 2px dashed #CBD5E1; color: #64748B; margin-top: 20px;">
+        <h2 style="color: #CBD5E1;">Area Pratinjau Gambar</h2>
+        <h3>Menunggu Gambar</h3>
+        <p>Silakan unggah foto atau potret melalui tab di atas untuk memulai analisis.</p>
     </div>
     """, unsafe_allow_html=True)
 
 st.markdown("<br><hr>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: #94A3B8; font-size: 0.85rem;'>Dibangun menggunakan arsitektur TensorFlow dan Streamlit</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #9CA3AF; font-size: 0.9rem;'>Didesain & Dikembangkan oleh jnn | Teknologi oleh TensorFlow & Streamlit</p>", unsafe_allow_html=True)
