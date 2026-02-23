@@ -290,8 +290,8 @@ def predict_image(image_file, model):
     return fig, detected_data
 
 with st.sidebar:
-    st.image("https://th.bing.com/th/id/R.7545b55b9d17b1070e2c884ffa6858fd?rik=3D80%2fEg6i9TK2A&riu=http%3a%2f%2f1.bp.blogspot.com%2f-P8KJ9GPI9ds%2fT9QrVuX-ycI%2fAAAAAAAAK3g%2fdW9fIbMoO14%2fs1600%2flogo%2bunsri.png", use_column_width=True)
-    st.markdown("<h2 style='text-align: center; color: #19376D;'>DermSight AI</h2>", unsafe_allow_html=True)
+    st.image("https://th.bing.com/th/id/R.7545b55b9d17b1070e2c884ffa6858fd?rik=3D80%2fEg6i9TK2A&riu=http%3a%2f%2f1.bp.blogspot.com%2f-P8KJ9GPI9ds%2fT9QrVuX-ycI%2fAAAAAAAAK3g%2fdW9fIbMoO14%2fs1600%2flogo%2bunsri.png&ehk=9XoxwvoaYfdUgOg7B0UHZJ0FrOEQIEK%2fiOrPBfmqUgE%3d&risl=&pid=ImgRaw&r=0", use_column_width=True)
+    st.markdown("<h2 style='text-align: center; color: #19376D;'>DermSight</h2>", unsafe_allow_html=True)
     st.markdown("""
     <div style='background-color: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 20px;'>
     <b>Purpose:</b><br>
@@ -427,4 +427,4 @@ else:
     """, unsafe_allow_html=True)
 
 st.markdown("<br><hr>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: #9CA3AF; font-size: 0.9rem;'>Designed & Developed by jnn | Powered by TensorFlow & Streamlit</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #9CA3AF; font-size: 0.9rem;'>Designed & Developed by jnn</p>", unsafe_allow_html=True)
