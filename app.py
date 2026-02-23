@@ -52,7 +52,7 @@ medical_info = {
 @st.cache_resource
 def load_model():
     if not os.path.exists(WEIGHTS_PATH):
-        st.error(f"❌ File '{WEIGHTS_PATH}' tidak ditemukan!")
+        st.error(f"File '{WEIGHTS_PATH}' tidak ditemukan!")
         st.stop()
     
     try:
@@ -178,7 +178,7 @@ def predict_image(image_file, model):
     ax.axis('off')
     return fig, detected_data
 
-st.set_page_config(page_title="SkinCheck AI", page_icon="🔬", layout="wide")
+st.set_page_config(page_title="DermSight", page_icon="🔬", layout="wide")
 with st.sidebar:
     st.image("https://th.bing.com/th/id/R.7545b55b9d17b1070e2c884ffa6858fd?rik=3D80%2fEg6i9TK2A&riu=http%3a%2f%2f1.bp.blogspot.com%2f-P8KJ9GPI9ds%2fT9QrVuX-ycI%2fAAAAAAAAK3g%2fdW9fIbMoO14%2fs1600%2flogo%2bunsri.png&ehk=9XoxwvoaYfdUgOg7B0UHZJ0FrOEQIEK%2fiOrPBfmqUgE%3d&risl=&pid=ImgRaw&r=0", caption="Sriwijaya University", use_column_width=True)
     st.title("About the App")
@@ -187,7 +187,7 @@ with st.sidebar:
     **Model:** EfficientNetV2-S
     """)
     st.warning("**DISCLAIMER:**\nThis AI detection result is for REFERENCE ONLY. A definitive diagnosis must be performed by a certified Doctor.")
-st.title("SkinCheck AI: Early Skin Disease Detection")
+st.title("DermSight: Empowering Early Detection of Dermatological Conditions through Computer Vision and Real Time Camera Diagnostics")
 tab1, tab2 = st.tabs(["Upload from Gallery", "Take Photo (Camera)"])
 selected_file = None
 with tab1:
