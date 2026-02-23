@@ -57,7 +57,7 @@ def load_model():
     
     try:
         model = tf.keras.models.load_model(WEIGHTS_PATH)
-        print("✅ Full Model loaded successfully.")
+        print("Full Model loaded successfully.")
         return model
     except Exception as e:
         try:
@@ -180,7 +180,7 @@ def predict_image(image_file, model):
 
 st.set_page_config(page_title="SkinCheck AI", page_icon="🔬", layout="wide")
 with st.sidebar:
-    st.image("https://th.bing.com/th/id/R.7545b55b9d17b1070e2c884ffa6858fd?rik=3D80%2fEg6i9TK2A&riu=http%3a%2f%2f1.bp.blogspot.com%2f-P8KJ9GPI9ds%2fT9QrVuX-ycI%2fAAAAAAAAK3g%2fdW9fIbMoO14%2fs1600%2flogo%2bunsri.png&ehk=9XoxwvoaYfdUgOg7B0UHZJ0FrOEQIEK%2fiOrPBfmqUgE%3d&risl=&pid=ImgRaw&r=0", caption="Sriwijaya University Logo", use_column_width=True)
+    st.image("https://th.bing.com/th/id/R.7545b55b9d17b1070e2c884ffa6858fd?rik=3D80%2fEg6i9TK2A&riu=http%3a%2f%2f1.bp.blogspot.com%2f-P8KJ9GPI9ds%2fT9QrVuX-ycI%2fAAAAAAAAK3g%2fdW9fIbMoO14%2fs1600%2flogo%2bunsri.png&ehk=9XoxwvoaYfdUgOg7B0UHZJ0FrOEQIEK%2fiOrPBfmqUgE%3d&risl=&pid=ImgRaw&r=0", caption="Sriwijaya University", use_column_width=True)
     st.title("About the App")
     st.info("""
     **SkinCheck AI** provides early detection of skin abnormalities using *Deep Learning* technology.
@@ -211,7 +211,7 @@ if selected_file is not None:
                 st.pyplot(result_fig)
                 buf = io.BytesIO(); result_fig.savefig(buf, format="png", bbox_inches='tight'); buf.seek(0)
                 col_dl1, col_dl2 = st.columns(2)
-                with col_dl1: st.download_button("⬇️ Download Result", data=buf, file_name="result.png", mime="image/png", use_container_width=True)
+                with col_dl1: st.download_button("Download Result", data=buf, file_name="result.png", mime="image/png", use_container_width=True)
             st.divider()
             if len(det_data) > 0:
                 df_result = pd.DataFrame(det_data)
@@ -221,7 +221,7 @@ if selected_file is not None:
                 for d in unique_diseases:
                     dk = d.split(" / ")[0] if " / " in d else d
                     info = medical_info.get(dk, medical_info['Normal Skin'])
-                    with st.expander(f"ℹ️ What is {dk}?", expanded=True):
+                    with st.expander(f"What is {dk}?", expanded=True):
                         st.markdown(f"**Risk:** `{info['risk']}`\n**Explanation:** {info['description']}\n**Advice:** {info['advice']}")
             else: st.success("**Clean Result!**")
 else: st.info("Please select an input method above.")
