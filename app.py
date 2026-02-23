@@ -343,7 +343,7 @@ with tab3:
     st.markdown("Here is a list of conditions trained and recognizable by our AI model:")
     for kondisi, info in medical_info.items():
         st.markdown(f"""
-        <div class="info-card">
+        <div class="info-card" style="border-left-color: {info['risk_text']};">
             <h3 style='margin-top: 0; color: #19376D;'>{kondisi}</h3>
             <div class="risk-badge" style="background-color: {info['risk_color']}; color: {info['risk_text']};">
                 Risk: {info['risk']}
