@@ -59,6 +59,7 @@ st.markdown("""
         transition: all 0.3s ease;
         width: 100%;
     }
+    
     .stButton>button:hover {
         box-shadow: 0 8px 25px rgba(87, 108, 188, 0.6);
         transform: translateY(-2px);
@@ -68,16 +69,18 @@ st.markdown("""
 
     .info-card {
         background: #ffffff;
-        border-radius: 15px;
+        border-radius: 12px;
         padding: 25px;
         margin-bottom: 20px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-        border-left: 8px solid #576CBC;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        border: 1px solid #E2E8F0;
+        border-left: 6px solid #576CBC;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
+    
     .info-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.08);
     }
     
     .risk-badge {
@@ -99,6 +102,44 @@ st.markdown("""
         height: 1px;
         background: linear-gradient(to right, rgba(0,0,0,0), rgba(87, 108, 188, 0.3), rgba(0,0,0,0));
         margin: 30px 0;
+    }
+
+    .custom-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 15px 0 25px 0;
+        font-size: 0.95em;
+        font-family: 'Poppins', sans-serif;
+        border-radius: 8px 8px 0 0;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        border: 1px solid #E2E8F0;
+    }
+    
+    .custom-table thead tr {
+        background-color: #F8FAFC;
+        color: #475569;
+        text-align: left;
+        font-weight: 600;
+        border-bottom: 2px solid #E2E8F0;
+    }
+    
+    .custom-table th, .custom-table td {
+        padding: 14px 15px;
+    }
+    
+    .custom-table tbody tr {
+        border-bottom: 1px solid #E2E8F0;
+        background-color: #FFFFFF;
+        color: #334155;
+    }
+    
+    .custom-table tbody tr:last-of-type {
+        border-bottom: none;
+    }
+    
+    .custom-table tbody tr:hover {
+        background-color: #F8FAFC;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -150,6 +191,15 @@ medical_info = {
     }
 }
 
+risk_rank = {
+    'VERY HIGH': 5,
+    'MODERATE-HIGH': 4,
+    'MODERATE': 3,
+    'LOW': 2,
+    'SAFE': 1,
+    'VERY SAFE': 0
+}
+
 @st.cache_resource
 def load_model():
     if not os.path.exists(WEIGHTS_PATH):
@@ -185,20 +235,15 @@ def process_results(preds_batch, coords, boxes, confidences, class_ids):
         
         if p_mel > 0.30 or p_scc > 0.30 or p_bcc > 0.30:
             suspects = []
-            if p_mel > 0.20: suspects.append((p_mel, 2, "Melanoma"))
-            if p_scc > 0.20: suspects.append((p_scc, 5, "SCC"))
-            if p_bcc > 0.20: suspects.append((p_bcc, 1, "BCC"))
-            suspects.sort(key=lambda x: x[0], reverse=True)
+            if p_mel > 0.20: suspects.append((p_mel, "Melanoma"))
+            if p_scc > 0.20: suspects.append((p_scc, "Squamous Cell Carcinoma"))
+            if p_bcc > 0.20: suspects.append((p_bcc, "Basal Cell Carcinoma"))
+            suspects.sort(key=lambda item: item[0], reverse=True)
             
-            if len(suspects) >= 2:
+            if suspects and suspects[0][0] > 0.30:
                 boxes.append([x, y, IMG_SIZE, IMG_SIZE])
                 confidences.append(float(suspects[0][0]))
-                class_ids.append(f"{suspects[0][2]} / {suspects[1][2]}")
-            elif len(suspects) == 1:
-                if suspects[0][0] > 0.30: 
-                    boxes.append([x, y, IMG_SIZE, IMG_SIZE])
-                    confidences.append(float(suspects[0][0]))
-                    class_ids.append(suspects[0][1])
+                class_ids.append(suspects[0][1])
         else:
             class_id = np.argmax(preds)
             confidence = preds[class_id]
@@ -208,7 +253,7 @@ def process_results(preds_batch, coords, boxes, confidences, class_ids):
             if label != 'Normal Skin' and confidence > thresh:
                 boxes.append([x, y, IMG_SIZE, IMG_SIZE])
                 confidences.append(float(confidence))
-                class_ids.append(class_id)
+                class_ids.append(label)
 
 def predict_image(image_file, model):
     file_bytes = np.asarray(bytearray(image_file.read()), dtype=np.uint8)
@@ -258,22 +303,19 @@ def predict_image(image_file, model):
         for i in indices.flatten():
             x, y, w_box, h_box = boxes[i]
             score = confs[i]
-            raw_id = ids[i]
-            if isinstance(raw_id, str):
-                label = raw_id; box_color = 'orange'; font_color = 'black'
-            else:
-                label = class_names[raw_id]
-                if label == 'Melanoma': box_color = '#DC2626'; font_color = 'white'
-                elif label == 'Squamous Cell Carcinoma': box_color = '#D97706'; font_color = 'white'
-                elif label == 'Basal Cell Carcinoma': box_color = '#CA8A04'; font_color = 'white'
-                elif label == 'Acne':
-                    box_color = '#059669'; font_color = 'white'
-                    shrink = 0.5
-                    new_w, new_h = int(w_box*shrink), int(h_box*shrink)
-                    x += (w_box-new_w)//2; y += (h_box-new_h)//2
-                    w_box, h_box = new_w, new_h
-                else: box_color = '#0284C7'; font_color = 'white'
-                
+            label = ids[i]
+            
+            if label == 'Melanoma': box_color = '#DC2626'; font_color = 'white'
+            elif label == 'Squamous Cell Carcinoma': box_color = '#D97706'; font_color = 'white'
+            elif label == 'Basal Cell Carcinoma': box_color = '#CA8A04'; font_color = 'white'
+            elif label == 'Acne':
+                box_color = '#059669'; font_color = 'white'
+                shrink = 0.5
+                new_w, new_h = int(w_box*shrink), int(h_box*shrink)
+                x += (w_box-new_w)//2; y += (h_box-new_h)//2
+                w_box, h_box = new_w, new_h
+            else: box_color = '#0284C7'; font_color = 'white'
+            
             ax.add_patch(plt.Rectangle((x, y), w_box, h_box, fill=False, color=box_color, linewidth=4))
             ax.text(x, y-10, f"{label} ({score*100:.0f}%)", color=font_color, bbox=dict(facecolor=box_color, alpha=0.9, edgecolor='none', boxstyle='round,pad=0.3'), fontsize=11, fontweight='bold')
             
@@ -284,18 +326,18 @@ def predict_image(image_file, model):
     for label, score in highest_confidence_per_class.items():
         detected_data.append({'Condition': label, 'AI Accuracy': f"{score*100:.1f}%"})
         
-    detected_data = sorted(detected_data, key=lambda x: float(x['AI Accuracy'].strip('%')), reverse=True)
+    detected_data = sorted(detected_data, key=lambda val: float(val['AI Accuracy'].strip('%')), reverse=True)
             
     ax.axis('off')
     return fig, detected_data
 
 with st.sidebar:
-    st.image("https://th.bing.com/th/id/R.7545b55b9d17b1070e2c884ffa6858fd?rik=3D80%2fEg6i9TK2A&riu=http%3a%2f%2f1.bp.blogspot.com%2f-P8KJ9GPI9ds%2fT9QrVuX-ycI%2fAAAAAAAAK3g%2fdW9fIbMoO14%2fs1600%2flogo%2bunsri.png&ehk=9XoxwvoaYfdUgOg7B0UHZJ0FrOEQIEK%2fiOrPBfmqUgE%3d&risl=&pid=ImgRaw&r=0", use_column_width=True)
+    st.image("https://th.bing.com/th/id/R.7545b55b9d17b1070e2c884ffa6858fd?rik=3D80%2fEg6i9TK2A&riu=http%3a%2f%2f1.bp.blogspot.com%2f-P8KJ9GPI9ds%2fT9QrVuX-ycI%2fAAAAAAAAK3g%2fdW9fIbMoO14%2fs1600%2flogo%2bunsri.png", use_column_width=True)
     st.markdown("<h2 style='text-align: center; color: #19376D;'>DermSight</h2>", unsafe_allow_html=True)
     st.markdown("""
     <div style='background-color: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 20px;'>
     <b>Purpose:</b><br>
-    Helping the public detect early skin problems through the lens of Artificial Intelligence (Deep Learning).
+    Helping the public detect early skin problems through the lens of Artificial Intelligence.
     <hr style='margin: 10px 0;'>
     <b>Architecture:</b><br>
     EfficientNetV2-S
@@ -316,7 +358,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-with st.expander("**Application Usage Guide (Must Read)**"):
+with st.expander("Application Usage Guide (Must Read)"):
     st.markdown("""
     - **Step 1:** Select the upload tab from the Gallery or directly use your Camera.
     - **Step 2:** Use bright lighting, ensure the photo is focused and clearly shows the skin area.
@@ -382,47 +424,53 @@ if selected_file is not None:
             st.download_button("Save Results to Gallery", data=buf, file_name="DermSight_Result.png", mime="image/png", use_container_width=True)
             
         st.markdown("<hr>", unsafe_allow_html=True)
-        st.markdown("<h2 style='text-align:center; color:#19376D;'>Your Medical Summary</h2>", unsafe_allow_html=True)
+        st.markdown("<h2 style='text-align:center; color:#19376D; margin-bottom: 30px;'>Your Medical Summary</h2>", unsafe_allow_html=True)
         
         if len(det_data) > 0:
             col_table, col_info = st.columns([1, 2], gap="large")
             with col_table:
-                st.markdown("#### AI Findings Detail:")
-                df_result = pd.DataFrame(det_data)
-                df_result.index = df_result.index + 1
-                st.dataframe(df_result, use_container_width=True)
+                st.markdown("<h4 style='color: #1E293B; margin-bottom: 0;'>AI Findings Detail:</h4>", unsafe_allow_html=True)
+                
+                table_html = "<table class='custom-table'><thead><tr><th></th><th>Condition</th><th>AI Accuracy</th></tr></thead><tbody>"
+                for idx, row in enumerate(det_data):
+                    table_html += f"<tr><td style='color: #94A3B8;'>{idx+1}</td><td>{row['Condition']}</td><td>{row['AI Accuracy']}</td></tr>"
+                table_html += "</tbody></table>"
+                
+                st.markdown(table_html, unsafe_allow_html=True)
             
             with col_info:
-                st.markdown("#### Explanation & Action:")
-                unique_diseases = set([d['Condition'] for d in det_data])
-                for d in unique_diseases:
-                    dk = d.split(" / ")[0] if " / " in d else d
+                st.markdown("<h4 style='color: #1E293B; margin-bottom: 15px;'>Explanation & Action:</h4>", unsafe_allow_html=True)
+                
+                unique_diseases = list(set([d['Condition'] for d in det_data]))
+                unique_diseases.sort(key=lambda x: risk_rank[medical_info.get(x, medical_info['Normal Skin'])['risk']], reverse=True)
+                
+                for dk in unique_diseases:
                     info = medical_info.get(dk, medical_info['Normal Skin'])
                     
                     st.markdown(f"""
-                    <div class="info-card" style="border-left-color: {info['risk_text']};">
-                        <h4 style="margin-top: 0; color: #1E293B;">{dk}</h4>
-                        <div class="risk-badge" style="background-color: {info['risk_color']}; color: {info['risk_text']};">
+                    <div class="info-card" style="border-left-color: {info['risk_text']}; margin-bottom: 25px;">
+                        <h3 style="margin-top: 0; margin-bottom: 15px; color: #1E293B;">{dk}</h3>
+                        <div class="risk-badge" style="background-color: {info['risk_color']}; color: {info['risk_text']}; padding: 6px 14px; font-size: 0.8rem; margin-bottom: 20px;">
                             {info['risk']}
                         </div>
-                        <p style="color: #475569;"><b>Explanation:</b> {info['description']}</p>
-                        <p style="color: #0F172A;"><b>Action:</b> <em>{info['advice']}</em></p>
+                        <p style="color: #475569; font-size: 0.95rem; margin-bottom: 15px;"><b>Explanation:</b> {info['description']}</p>
+                        <p style="color: #0F172A; font-size: 0.95rem; margin-bottom: 0;"><b>Action:</b> <em>{info['advice']}</em></p>
                     </div>
                     """, unsafe_allow_html=True)
         else: 
             st.markdown("""
             <div style="background: linear-gradient(135deg, #10B981, #059669); padding: 30px; border-radius: 15px; text-align: center; color: white; box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);">
-                <h2 style="margin:0; color: white;">Good News!</h2>
-                <p style="font-size: 1.1rem; margin-top: 10px;">The AI found no indications of dangerous abnormalities such as cancer in the scanned area. Your skin looks healthy!</p>
+                <h2 style="margin:0; color: white;">Good News</h2>
+                <p style="font-size: 1.1rem; margin-top: 10px;">The AI found no indications of dangerous abnormalities such as cancer in the scanned area. Your skin looks healthy.</p>
             </div>
             """, unsafe_allow_html=True)
             
 else: 
     st.markdown("""
     <div style="text-align:center; padding: 50px; background-color: #F8F9FA; border-radius: 15px; border: 2px dashed #CBD5E1; color: #64748B; margin-top: 20px;">
-        <h2 style="color: #CBD5E1;">Image Preview Area</h2>
-        <h3>Waiting for Image</h3>
-        <p>Please upload a photo or take a picture via the tabs above to start the analysis.</p>
+        <h2 style="color: #CBD5E1; margin-bottom: 10px;">Image Preview Area</h2>
+        <h3 style="color: #64748B;">Waiting for Image</h3>
+        <p style="color: #94A3B8;">Please upload a photo or take a picture via the tabs above to start the analysis.</p>
     </div>
     """, unsafe_allow_html=True)
 
