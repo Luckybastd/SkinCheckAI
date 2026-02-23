@@ -8,6 +8,46 @@ import os
 import pandas as pd
 import io
 
+# 1. KONFIGURASI HALAMAN WAJIB DI ATAS
+st.set_page_config(page_title="DermSight AI", page_icon="🔬", layout="wide")
+
+# 2. CUSTOM CSS UNTUK TAMPILAN LEBIH MENARIK
+st.markdown("""
+    <style>
+    .main-header {
+        font-size: 2.5rem;
+        color: #1E3A8A;
+        text-align: center;
+        font-weight: bold;
+        margin-bottom: 0px;
+    }
+    .sub-header {
+        text-align: center;
+        color: #6B7280;
+        margin-bottom: 30px;
+    }
+    .info-box {
+        background-color: #F3F4F6;
+        padding: 15px;
+        border-radius: 10px;
+        border-left: 5px solid #3B82F6;
+        margin-bottom: 20px;
+    }
+    .stButton>button {
+        background-color: #2563EB;
+        color: white;
+        border-radius: 8px;
+        padding: 10px 24px;
+        font-weight: bold;
+        transition: all 0.3s;
+    }
+    .stButton>button:hover {
+        background-color: #1D4ED8;
+        transform: scale(1.02);
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 WEIGHTS_PATH = 'model_weights.h5' 
 IMG_SIZE = 384
 NUM_CLASSES = 6
@@ -18,46 +58,45 @@ class_names = ['Acne', 'Basal Cell Carcinoma', 'Melanoma', 'Nevus', 'Normal Skin
 
 medical_info = {
     'Melanoma': {
-        'risk': 'HIGH (Seek Immediate Medical Attention)',
-        'description': 'The most serious type of skin cancer. Develops in the cells (melanocytes) that produce melanin.',
-        'advice': 'Consult a Dermatologist immediately for biopsy and further treatment.'
+        'risk': 'SANGAT TINGGI 🔴 (Butuh Penanganan Medis Segera)',
+        'description': 'Jenis kanker kulit yang paling serius dan mematikan jika dibiarkan. Berkembang dari sel yang memproduksi pigmen melanin.',
+        'advice': 'Segera konsultasikan dengan Dokter Spesialis Kulit (Dermatolog) untuk biopsi dan tindakan lebih lanjut. Jangan ditunda!'
     },
     'Squamous Cell Carcinoma': {
-        'risk': 'MODERATE-HIGH',
-        'description': 'Skin cancer that develops in the outer layer of the skin.',
-        'advice': 'See a doctor. It is usually curable if treated early.'
+        'risk': 'MENENGAH-TINGGI 🟠',
+        'description': 'Kanker kulit yang berkembang di lapisan luar kulit (epidermis). Biasanya muncul di area yang sering terkena sinar matahari.',
+        'advice': 'Segera temui dokter. Tingkat kesembuhan sangat tinggi jika terdeteksi dan diobati sejak dini.'
     },
     'Basal Cell Carcinoma': {
-        'risk': 'MODERATE',
-        'description': 'The most common type of skin cancer. Grows slowly and rarely spreads.',
-        'advice': 'Consult a doctor for tissue removal.'
+        'risk': 'MENENGAH 🟡',
+        'description': 'Jenis kanker kulit yang paling umum. Tumbuh sangat lambat dan jarang menyebar ke bagian tubuh lain, namun bisa merusak jaringan sekitar.',
+        'advice': 'Konsultasikan dengan dokter untuk prosedur pengangkatan jaringan agar tidak membesar.'
     },
     'Acne': {
-        'risk': 'LOW (Aesthetic/Infection Issue)',
-        'description': 'Inflammation of oil glands. Can appear as blackheads, papules, or pustules.',
-        'advice': 'Maintain facial hygiene, use acne medication, or consult an aesthetic doctor.'
+        'risk': 'RENDAH 🟢 (Masalah Estetika/Infeksi Ringan)',
+        'description': 'Jerawat. Terjadi akibat peradangan pada kelenjar minyak. Bisa berupa komedo, papula, atau pustula bernanah.',
+        'advice': 'Jaga kebersihan wajah, gunakan obat jerawat yang dijual bebas, atau konsultasikan dengan dokter estetika jika meradang hebat.'
     },
     'Nevus': {
-        'risk': 'LOW (Safe)',
-        'description': 'Benign mole. A collection of normal pigment cells.',
-        'advice': 'Usually requires no action unless there are drastic changes in shape/color.'
+        'risk': 'RENDAH 🟢 (Aman)',
+        'description': 'Tahi lalat jinak. Merupakan kumpulan sel pigmen normal pada kulit yang tidak berbahaya.',
+        'advice': 'Umumnya tidak perlu tindakan medis. Namun, pantau jika ada perubahan drastis pada bentuk, warna, atau ukuran.'
     },
     'Normal Skin': {
-        'risk': 'SAFE',
-        'description': 'Healthy skin with no detected abnormalities.',
-        'advice': 'Maintain skin health and use sunscreen regularly.'
+        'risk': 'AMAN 🔵',
+        'description': 'Kulit terlihat sehat dan tidak terdeteksi adanya kelainan atau lesi berbahaya.',
+        'advice': 'Tetap jaga kesehatan kulit Anda! Gunakan tabir surya (sunscreen) secara rutin saat beraktivitas di luar ruangan.'
     }
 }
 
 @st.cache_resource
 def load_model():
     if not os.path.exists(WEIGHTS_PATH):
-        st.error(f"File '{WEIGHTS_PATH}' tidak ditemukan!")
+        st.error(f"⚠️ File '{WEIGHTS_PATH}' tidak ditemukan! Pastikan file model ada di direktori yang benar.")
         st.stop()
     
     try:
         model = tf.keras.models.load_model(WEIGHTS_PATH)
-        print("Full Model loaded successfully.")
         return model
     except Exception as e:
         try:
@@ -121,7 +160,7 @@ def predict_image(image_file, model):
         original_img = cv2.resize(original_img, (int(w*scale)+1, int(h*scale)+1))
         h, w, _ = original_img.shape
 
-    progress_bar = st.progress(0, text="Scanning skin image...")
+    progress_bar = st.progress(0, text="🔍 Sedang memindai gambar kulit Anda...")
     batch_img, batch_xy, boxes, confs, ids = [], [], [], [], []
     y_range = range(0, h - IMG_SIZE + 1, STRIDE)
     x_range = range(0, w - IMG_SIZE + 1, STRIDE)
@@ -152,6 +191,7 @@ def predict_image(image_file, model):
     fig, ax = plt.subplots(figsize=(10, 8))
     ax.imshow(original_img)
     detected_data = [] 
+    
     if len(indices) > 0:
         for i in indices.flatten():
             x, y, w_box, h_box = boxes[i]
@@ -171,59 +211,119 @@ def predict_image(image_file, model):
                     x += (w_box-new_w)//2; y += (h_box-new_h)//2
                     w_box, h_box = new_w, new_h
                 else: box_color = '#00FF00'; font_color = 'black'
+                
             ax.add_patch(plt.Rectangle((x, y), w_box, h_box, fill=False, color=box_color, linewidth=3))
-            ax.text(x, y-10, f"{label} ({score*100:.0f}%)", color=font_color, bbox=dict(facecolor=box_color, alpha=0.8), fontsize=9, fontweight='bold')
-            data_entry = {'Condition': label, 'Confidence': f"{score*100:.1f}%"}
+            ax.text(x, y-10, f"{label} ({score*100:.0f}%)", color=font_color, bbox=dict(facecolor=box_color, alpha=0.8), fontsize=10, fontweight='bold')
+            data_entry = {'Kondisi Terdeteksi': label, 'Tingkat Keyakinan (Confidence)': f"{score*100:.1f}%"}
             if data_entry not in detected_data: detected_data.append(data_entry)
+            
     ax.axis('off')
     return fig, detected_data
 
-st.set_page_config(page_title="DermSight", page_icon="🔬", layout="wide")
+
+# --- STRUKTUR UI WEB ---
+
+# Sidebar
 with st.sidebar:
-    st.image("https://th.bing.com/th/id/R.7545b55b9d17b1070e2c884ffa6858fd?rik=3D80%2fEg6i9TK2A&riu=http%3a%2f%2f1.bp.blogspot.com%2f-P8KJ9GPI9ds%2fT9QrVuX-ycI%2fAAAAAAAAK3g%2fdW9fIbMoO14%2fs1600%2flogo%2bunsri.png&ehk=9XoxwvoaYfdUgOg7B0UHZJ0FrOEQIEK%2fiOrPBfmqUgE%3d&risl=&pid=ImgRaw&r=0", caption="Sriwijaya University", use_column_width=True)
-    st.title("About the App")
-    st.info("""
-    **SkinCheck AI** provides early detection of skin abnormalities using *Deep Learning* technology.
-    **Model:** EfficientNetV2-S
+    st.image("https://th.bing.com/th/id/R.7545b55b9d17b1070e2c884ffa6858fd?rik=3D80%2fEg6i9TK2A&riu=http%3a%2f%2f1.bp.blogspot.com%2f-P8KJ9GPI9ds%2fT9QrVuX-ycI%2fAAAAAAAAK3g%2fdW9fIbMoO14%2fs1600%2flogo%2bunsri.png&ehk=9XoxwvoaYfdUgOg7B0UHZJ0FrOEQIEK%2fiOrPBfmqUgE%3d&risl=&pid=ImgRaw&r=0", use_column_width=True)
+    st.title("Tentang Aplikasi")
+    st.markdown("""
+    **DermSight AI** dikembangkan untuk membantu deteksi dini masalah kulit menggunakan teknologi *Deep Learning* (Kecerdasan Buatan).
+    
+    ⚙️ **Mesin AI:** EfficientNetV2-S
     """)
-    st.warning("**DISCLAIMER:**\nThis AI detection result is for REFERENCE ONLY. A definitive diagnosis must be performed by a certified Doctor.")
-st.title("DermSight: Empowering Early Detection of Dermatological Conditions through Computer Vision and Real Time Camera Diagnostics")
-tab1, tab2 = st.tabs(["Upload from Gallery", "Take Photo (Camera)"])
+    st.warning("⚠️ **PERHATIAN:**\nHasil deteksi AI ini HANYA SEBAGAI REFERENSI AWAL. Tidak dapat menggantikan diagnosis medis profesional. Selalu konsultasikan dengan Dokter Spesialis Kulit.")
+
+# Main Page Header
+st.markdown('<p class="main-header">🔬 DermSight AI</p>', unsafe_allow_html=True)
+st.markdown('<p class="sub-header">Deteksi Dini Kondisi Kulit Anda dengan Kecerdasan Buatan secara Real-Time</p>', unsafe_allow_html=True)
+
+# Petunjuk Penggunaan
+with st.expander("📖 **Cara Menggunakan Aplikasi (Klik untuk membaca)**"):
+    st.markdown("""
+    1. **Pilih Metode:** Gunakan tab di bawah untuk memilih apakah Anda ingin mengunggah foto dari galeri atau memotret langsung dari kamera.
+    2. **Pastikan Pencahayaan Bagus:** Untuk hasil terbaik, pastikan foto kulit terlihat jelas, fokus, dan tidak gelap.
+    3. **Mulai Analisis:** Klik tombol **"Mulai Analisis AI"** dan tunggu beberapa detik.
+    4. **Baca Hasil:** AI akan menyorot area yang mencurigakan dan memberikan penjelasan medis di bawah foto.
+    """)
+
+# Tabs (Ditambah tab Edukasi agar informatif)
+tab1, tab2, tab3 = st.tabs(["📁 Unggah dari Galeri", "📷 Ambil Foto (Kamera)", "📚 Kamus Penyakit Kulit"])
+
 selected_file = None
+
 with tab1:
-    uploaded_file = st.file_uploader("Upload skin photo (JPG/PNG)", type=["jpg", "jpeg", "png"])
+    uploaded_file = st.file_uploader("Pilih foto kulit Anda (Format: JPG/PNG)", type=["jpg", "jpeg", "png"])
     if uploaded_file: selected_file = uploaded_file
+
 with tab2:
-    camera_file = st.camera_input("Take a photo directly")
+    camera_file = st.camera_input("Ambil foto kulit secara langsung")
     if camera_file: selected_file = camera_file
 
+with tab3:
+    st.subheader("Pahami Berbagai Kondisi Kulit")
+    st.markdown("Berikut adalah daftar kondisi yang dapat dideteksi oleh sistem kami:")
+    for kondisi, info in medical_info.items():
+        if kondisi != 'Normal Skin':
+            with st.expander(f"🔎 {kondisi}"):
+                st.markdown(f"**Tingkat Risiko:** {info['risk']}\n\n**Deskripsi:** {info['description']}\n\n**Saran Medis:** {info['advice']}")
+
+# Proses Prediksi
 if selected_file is not None:
-    col1, col2 = st.columns([1, 1])
-    model = load_model()
+    st.divider()
+    col1, col2 = st.columns([1, 1.2], gap="large")
+    
+    with st.spinner("Mempersiapkan mesin AI..."):
+        model = load_model()
+        
     with col1:
-        st.subheader("Input Photo")
-        st.image(selected_file, use_column_width=True)
-        if st.button("Start Analysis", type="primary", use_container_width=True):
-            selected_file.seek(0)
-            with col2:
-                st.subheader("AI Detection Result")
-                result_fig, det_data = predict_image(selected_file, model)
-                st.pyplot(result_fig)
-                buf = io.BytesIO(); result_fig.savefig(buf, format="png", bbox_inches='tight'); buf.seek(0)
-                col_dl1, col_dl2 = st.columns(2)
-                with col_dl1: st.download_button("Download Result", data=buf, file_name="result.png", mime="image/png", use_container_width=True)
-            st.divider()
-            if len(det_data) > 0:
-                df_result = pd.DataFrame(det_data)
-                df_result.index = df_result.index + 1
-                st.table(df_result)
-                unique_diseases = set([d['Condition'] for d in det_data])
-                for d in unique_diseases:
-                    dk = d.split(" / ")[0] if " / " in d else d
-                    info = medical_info.get(dk, medical_info['Normal Skin'])
-                    with st.expander(f"What is {dk}?", expanded=True):
-                        st.markdown(f"**Risk:** `{info['risk']}`\n**Explanation:** {info['description']}\n**Advice:** {info['advice']}")
-            else: st.success("**Clean Result!**")
-else: st.info("Please select an input method above.")
+        st.subheader("📷 Foto Input Anda")
+        st.image(selected_file, use_column_width=True, caption="Siap untuk dianalisis")
+        analyze_btn = st.button("🚀 Mulai Analisis AI", use_container_width=True)
+
+    if analyze_btn:
+        selected_file.seek(0)
+        with col2:
+            st.subheader("🩺 Hasil Deteksi AI")
+            result_fig, det_data = predict_image(selected_file, model)
+            st.pyplot(result_fig)
+            
+            # Tombol Download
+            buf = io.BytesIO(); result_fig.savefig(buf, format="png", bbox_inches='tight'); buf.seek(0)
+            st.download_button("💾 Unduh Gambar Hasil Deteksi", data=buf, file_name="DermSight_Result.png", mime="image/png", use_container_width=True)
+            
+        st.divider()
+        st.subheader("📊 Rangkuman Analisis")
+        
+        if len(det_data) > 0:
+            st.warning("⚠️ **Terdapat kondisi yang perlu diperhatikan pada kulit Anda. Silakan baca detailnya di bawah ini.**")
+            
+            # Tampilkan Tabel
+            df_result = pd.DataFrame(det_data)
+            df_result.index = df_result.index + 1
+            st.table(df_result)
+            
+            st.markdown("### 💡 Informasi Medis Terkait:")
+            unique_diseases = set([d['Kondisi Terdeteksi'] for d in det_data])
+            for d in unique_diseases:
+                dk = d.split(" / ")[0] if " / " in d else d
+                info = medical_info.get(dk, medical_info['Normal Skin'])
+                
+                # Desain kotak informasi penyakit
+                st.markdown(f"""
+                <div style="background-color: #F8FAFC; padding: 20px; border-radius: 10px; border-left: 6px solid #F59E0B; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                    <h4 style="margin-top: 0; color: #1E293B;">{dk}</h4>
+                    <p><strong>Tingkat Risiko:</strong> {info['risk']}</p>
+                    <p><strong>Penjelasan:</strong> {info['description']}</p>
+                    <p><strong>Saran:</strong> <em>{info['advice']}</em></p>
+                </div>
+                """, unsafe_allow_html=True)
+                
+        else: 
+            st.success("🎉 **Kabar Baik!** AI tidak mendeteksi adanya kelainan berbahaya (Acne/Kanker) pada gambar yang dipindai. Tetap jaga kesehatan kulit Anda!")
+            
+else: 
+    st.info("👆 Silakan pilih foto dari galeri atau gunakan kamera untuk memulai.")
+
 st.divider()
-st.caption("Made by: jnn")
+st.caption("Dibuat dengan ❤️ oleh jnn | Didukung oleh TensorFlow & Streamlit")
