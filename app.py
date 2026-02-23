@@ -305,14 +305,14 @@ with st.sidebar:
     st.markdown("""
     <div style='background-color: #FEF2F2; color: #991B1B; padding: 15px; border-radius: 10px; border-left: 5px solid #DC2626; font-size: 0.9rem;'>
     <b>MEDICAL DISCLAIMER</b><br>
-    This system is not a substitute for a doctor. It serves only as an initial reference. If in doubt, always visit the nearest health facility.
+    This system is not a substitute for a doctor. It serves only as a reference and initial detection tool. If in doubt, always visit the nearest health facility.
     </div>
     """, unsafe_allow_html=True)
 
 st.markdown("""
 <div class="hero-container">
     <div class="hero-title">DermSight AI</div>
-    <div class="hero-subtitle">Smart Assistant for Analyzing Your Skin Health</div>
+    <div class="hero-subtitle">Empowering Early Detection of Dermatological Conditions through Computer Vision and Real Time Camera Diagnostics.</div>
 </div>
 """, unsafe_allow_html=True)
 
