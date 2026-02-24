@@ -1,7 +1,6 @@
 import streamlit as st
 import cv2
 import numpy as np
-import matplotlib.subplots as plt_subplots
 import matplotlib.pyplot as plt
 import tensorflow as tf
 from PIL import Image
