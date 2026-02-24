@@ -1,6 +1,7 @@
 import streamlit as st
 import cv2
 import numpy as np
+import matplotlib.subplots as plt_subplots
 import matplotlib.pyplot as plt
 import tensorflow as tf
 from PIL import Image
@@ -8,7 +9,7 @@ import os
 import pandas as pd
 import io
 
-st.set_page_config(page_title="DermSight AI", page_icon="🔬", layout="wide")
+st.set_page_config(page_title="DermSight AI", layout="wide")
 
 st.markdown("""
     <style>
@@ -106,32 +107,42 @@ st.markdown("""
 
     .custom-table {
         width: 100%;
-        border-collapse: collapse;
+        border-collapse: separate;
+        border-spacing: 0;
         margin: 15px 0 25px 0;
-        font-size: 0.95em;
+        font-size: 1.05em;
         font-family: 'Poppins', sans-serif;
-        border-radius: 8px 8px 0 0;
+        border-radius: 10px;
         overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-        border: 1px solid #E2E8F0;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        border: 1px solid #CBD5E1;
     }
     
     .custom-table thead tr {
-        background-color: #F8FAFC;
-        color: #475569;
+        background-color: #1E293B;
+        color: #FFFFFF;
         text-align: left;
         font-weight: 600;
-        border-bottom: 2px solid #E2E8F0;
     }
     
-    .custom-table th, .custom-table td {
-        padding: 14px 15px;
+    .custom-table th {
+        padding: 16px 20px;
+        border-bottom: 2px solid #0F172A;
+    }
+    
+    .custom-table td {
+        padding: 16px 20px;
     }
     
     .custom-table tbody tr {
-        border-bottom: 1px solid #E2E8F0;
+        border-bottom: 1px solid #CBD5E1;
         background-color: #FFFFFF;
-        color: #334155;
+        color: #0F172A;
+        font-weight: 500;
+    }
+    
+    .custom-table tbody tr:nth-of-type(even) {
+        background-color: #F8FAFC;
     }
     
     .custom-table tbody tr:last-of-type {
@@ -139,7 +150,7 @@ st.markdown("""
     }
     
     .custom-table tbody tr:hover {
-        background-color: #F8FAFC;
+        background-color: #E2E8F0;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -431,9 +442,9 @@ if selected_file is not None:
             with col_table:
                 st.markdown("<h4 style='color: #1E293B; margin-bottom: 0;'>AI Findings Detail:</h4>", unsafe_allow_html=True)
                 
-                table_html = "<table class='custom-table'><thead><tr><th></th><th>Condition</th><th>AI Accuracy</th></tr></thead><tbody>"
+                table_html = "<table class='custom-table'><thead><tr><th style='width: 10%;'>#</th><th>Condition</th><th>AI Accuracy</th></tr></thead><tbody>"
                 for idx, row in enumerate(det_data):
-                    table_html += f"<tr><td style='color: #94A3B8;'>{idx+1}</td><td>{row['Condition']}</td><td>{row['AI Accuracy']}</td></tr>"
+                    table_html += f"<tr><td><b>{idx+1}</b></td><td>{row['Condition']}</td><td>{row['AI Accuracy']}</td></tr>"
                 table_html += "</tbody></table>"
                 
                 st.markdown(table_html, unsafe_allow_html=True)
