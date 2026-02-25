@@ -342,7 +342,7 @@ def predict_image(image_file, model):
     return fig, detected_data
 
 with st.sidebar:
-    st.image("https://th.bing.com/th/id/R.7545b55b9d17b1070e2c884ffa6858fd?rik=3D80%2fEg6i9TK2A&riu=http%3a%2f%2f1.bp.blogspot.com%2f-P8KJ9GPI9ds%2fT9QrVuX-ycI%2fAAAAAAAAK3g%2fdW9fIbMoO14%2fs1600%2flogo%2bunsri.png", use_column_width=True)
+    st.image("https://i0.wp.com/tambahpinter.com/wp-content/uploads/2020/05/logo-unsri-840x596.png", use_column_width=True)
     st.markdown("<h2 style='text-align: center; color: #19376D;'>DermSight</h2>", unsafe_allow_html=True)
     st.markdown("""
     <div style='background-color: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 20px;'>
