@@ -363,7 +363,7 @@ with st.sidebar:
 
 st.markdown("""
 <div class="hero-container">
-    <div class="hero-title">DermSight AI</div>
+    <div class="hero-title">DermSight</div>
     <div class="hero-subtitle">Empowering Early Detection of Dermatological Conditions through Computer Vision and Real Time Camera Diagnostics.</div>
 </div>
 """, unsafe_allow_html=True)
