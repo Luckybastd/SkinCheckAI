@@ -496,4 +496,4 @@ else:
     """, unsafe_allow_html=True)
 
 st.markdown("<br><hr>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: #9CA3AF; font-size: 0.9rem;'>Designed & Developed by Ceni, Keros, and Kenos (Sriwijaya University)</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #9CA3AF; font-size: 0.9rem;'>Designed & Developed by Jonatan, Arjun, Slamet, Giska, Gladys, Jeni (Sriwijaya University)</p>", unsafe_allow_html=True)
