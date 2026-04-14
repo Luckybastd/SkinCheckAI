@@ -8,7 +8,10 @@ import os
 import pandas as pd
 import io
 
-st.set_page_config(page_title="DermSight", layout="wide")
+try:
+    st.set_page_config(page_title="DermSight", page_icon="logo_dermsight.png", layout="wide")
+except:
+    st.set_page_config(page_title="DermSight", layout="wide")
 
 st.markdown("""
     <style>
@@ -342,10 +345,13 @@ def predict_image(image_file, model):
     return fig, detected_data
 
 with st.sidebar:
-    st.image("https://i0.wp.com/tambahpinter.com/wp-content/uploads/2020/05/logo-unsri-840x596.png", use_column_width=True)
-    st.markdown("<h2 style='text-align: center; color: #19376D;'>DermSight</h2>", unsafe_allow_html=True)
+    try:
+        st.image("logo_dermsight.png", use_column_width=True)
+    except:
+        st.markdown("<h2 style='text-align: center; color: #19376D;'>DermSight</h2>", unsafe_allow_html=True)
+    
     st.markdown("""
-    <div style='background-color: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 20px;'>
+    <div style='background-color: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 20px; margin-top: 15px;'>
     <b>Purpose:</b><br>
     Helping the public detect early skin problems through the lens of Artificial Intelligence.
     <hr style='margin: 10px 0;'>
@@ -360,6 +366,11 @@ with st.sidebar:
     This system is not a substitute for a doctor. It serves only as a reference and initial detection tool. If in doubt, always visit the nearest health facility.
     </div>
     """, unsafe_allow_html=True)
+
+    st.markdown("<br><hr style='margin: 10px 0;'>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; font-size: 0.85rem; color: #64748B;'>Developed by students of:</p>", unsafe_allow_html=True)
+    st.image("https://i0.wp.com/tambahpinter.com/wp-content/uploads/2020/05/logo-unsri-840x596.png", use_column_width=True)
+
 
 st.markdown("""
 <div class="hero-container">
@@ -485,4 +496,4 @@ else:
     """, unsafe_allow_html=True)
 
 st.markdown("<br><hr>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: #9CA3AF; font-size: 0.9rem;'>Designed & Developed by jnn</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #9CA3AF; font-size: 0.9rem;'>Designed & Developed by Ceni, Keros, and Kenos (Sriwijaya University)</p>", unsafe_allow_html=True)
